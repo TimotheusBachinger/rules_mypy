@@ -59,6 +59,8 @@ def _mypy_impl(target, ctx):
             types.append(dep[PyTypeLibraryInfo].directory.path + "/site-packages")
         elif dep.label.workspace_root.startswith("external/"):
             external_deps.append(dep.label.workspace_root + "/site-packages")
+        elif dep.label.package != ctx.label.package:
+            external_deps.append(dep.label.package)
 
         if MypyCacheInfo in dep:
             upstream_caches.append(dep[MypyCacheInfo].directory)
