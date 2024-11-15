@@ -59,6 +59,8 @@ def _mypy_impl(target, ctx):
             types.append(dep[PyTypeLibraryInfo].directory.path + "/site-packages")
         elif dep.label.workspace_root.startswith("external/"):
             external_deps.append(dep.label.workspace_root + "/site-packages")
+        elif dep.label.package != ctx.label.package:
+            external_deps.append(dep.label.package)
 
         if MypyCacheInfo in dep:
             upstream_caches.append(dep[MypyCacheInfo].directory)
@@ -75,7 +77,7 @@ def _mypy_impl(target, ctx):
 
     # types need to appear first in the mypy path since the module directories
     # are the same and mypy resolves the first ones, first.
-    mypy_path = ":".join(types + external_deps + unique_generated_dirs)
+    mypy_path = ":".join(types + external_deps + unique_generated_dirs + [ctx.label.package])
 
     output_file = ctx.actions.declare_file(ctx.rule.attr.name + ".mypy_stdout")
 
