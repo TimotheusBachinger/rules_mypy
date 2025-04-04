@@ -73,6 +73,7 @@ def run_mypy(
             "--explicit-package-bases",
             # speedup
             "--fast-module-lookup",
+            "--no-color-output",
         ]
         + srcs
     )
